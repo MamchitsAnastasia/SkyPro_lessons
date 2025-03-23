@@ -6,3 +6,5 @@ print("Номер карты с маской: ", widget.mask_account_card(accoun
 
 unformatted_date = input("Введите дату: ")
 print("Отформатированная дата: ", widget.get_date(unformatted_date))
+
+print("Тестовые изменения для инициализации новой ветки 'develop'")
