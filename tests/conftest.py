@@ -7,19 +7,19 @@ from string import ascii_uppercase, digits
 # Фикстура для генерации случайных номеров карт
 @pytest.fixture(scope="session")
 def generate_random_card_number():
-    def _generate(length=16):
+    def card_number_generate(length=16):
         return ''.join(str(randint(0, 9)) for _ in range(length))
 
-    return _generate
+    return card_number_generate
 
 
 # Фикстура для генерации случайных номеров счетов
 @pytest.fixture(scope="session")
 def generate_random_account_id():
-    def _generate(length=20):
-        return ''.join(choice(ascii_uppercase + digits) for _ in range(length))
+    def account_id_generate(length=20):
+        return ''.join(str(randint(0, 9)) for _ in range(length))
 
-    return _generate
+    return account_id_generate
 
 
 # Фикстура для генерации случайных наименований карт/счетов
