@@ -26,18 +26,18 @@ def generate_random_account_id():
 @pytest.fixture(scope="session")
 def generate_random_account_card_name():
     types = ["Счет", "Карта"]
-    lengths = [20, 30]
+    lengths = [16, 20]
 
-    def _generate(type=None, length=None):
+    def random_account_card_name_generate(type=None, length=None):
         if not type:
             type = choice(types)
         if not length:
             length = choice(lengths)
 
-        name = type + '-' + ''.join(sample(digits, length))
+        name = type + ' ' + ''.join(str(randint(0, 9)) for _ in range(length))
         return name
 
-    return _generate
+    return random_account_card_name_generate
 
 
 # Фикстура для генерации случайных дат
@@ -46,7 +46,8 @@ def generate_random_date():
     today = date.today()
     days_ago = randint(-365, 365)
     random_date = today + timedelta(days=days_ago)
-    return random_date.strftime("%Y-%m-%d")
+    formated_random_date = random_date.strftime("%Y-%m-%dT%H:%M:%S.%f")
+    return formated_random_date
 
 
 # Фикстура для генерации списка операций
