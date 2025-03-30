@@ -8,21 +8,19 @@ def mask_account_card(account_card: str) -> str:
     """Принимает на вход наименование карты или счёта (тип и номер) и возвращает маску"""
 
     if account_card[:4] == "Счет":
-        if re.findall(r"\d+", account_card) != 20:
+        account_card_num = re.findall(r"\d+", account_card)
+        if len(account_card_num[0]) != 20 or len(account_card_num) == 0:
             raise ValueError("Введён некорректный номер счёта")
         mask_account_card_num = masks.get_mask_account(account_card[-20:])
         mask_account_card_all = account_card[:-20] + mask_account_card_num
     else:
-        if re.findall(r"\d+", account_card) != 16:
+        account_card_num = re.findall(r"\d+", account_card)
+        if len(account_card_num[0]) != 16 or len(account_card_num) == 0:
             raise ValueError("Введён некорректный номер карты")
         mask_account_card_num = masks.get_mask_card_number(account_card[-16:])
         mask_account_card_all = account_card[:-16] + mask_account_card_num
 
-    try:
-        return mask_account_card_all
-    except Exception as e:
-        print(f"Ошибка при создании маски: {e}")
-        return ""
+    return mask_account_card_all
 
 
 def get_date(unformatted_date: str) -> str:
