@@ -1,15 +1,15 @@
-import pytest
 from datetime import date, timedelta
-from random import choice, randint, sample
-from string import ascii_uppercase, digits
-from typing import Callable, List, Any, Optional
+from random import choice, randint
+from typing import Callable, Optional
+
+import pytest
 
 
 # Фикстура для генерации случайных номеров карт
 @pytest.fixture(scope="session")
 def generate_random_card_number() -> Callable[[int], str]:
     def card_number_generate(length: int = 16) -> str:
-        return '01' + ''.join(str(randint(0, 9)) for _ in range(length - 2))
+        return "01" + "".join(str(randint(0, 9)) for _ in range(length - 2))
 
     return card_number_generate
 
@@ -18,7 +18,7 @@ def generate_random_card_number() -> Callable[[int], str]:
 @pytest.fixture(scope="session")
 def generate_random_account_id() -> Callable[[int], str]:
     def account_id_generate(length: int = 20) -> str:
-        return '01' + ''.join(str(randint(0, 9)) for _ in range(length-2))
+        return "01" + "".join(str(randint(0, 9)) for _ in range(length - 2))
 
     return account_id_generate
 
@@ -35,7 +35,7 @@ def generate_random_account_card_name() -> Callable[[Optional[str], Optional[int
         if not length:
             length = choice(lengths)
 
-        name = type + ' ' + ''.join(str(randint(0, 9)) for _ in range(length))
+        name = type + " " + "".join(str(randint(0, 9)) for _ in range(length))
         return name
 
     return random_account_card_name_generate
