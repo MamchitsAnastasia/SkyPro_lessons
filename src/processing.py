@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def filter_by_state(list_of_operations: list[dict], state: str = "EXECUTED") -> list[dict]:
     """Функция принимает список всех операций и возвращает список операций с указанным значением 'state',
     по умолчанию 'state' = 'EXECUTED'"""

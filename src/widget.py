@@ -1,5 +1,6 @@
-import re
 import datetime
+import re
+
 from src import masks
 
 
@@ -7,12 +8,12 @@ def mask_account_card(account_card: str) -> str:
     """Принимает на вход наименование карты или счёта (тип и номер) и возвращает маску"""
 
     if account_card[:4] == "Счет":
-        if re.findall(r'\d+', account_card) != 20:
+        if re.findall(r"\d+", account_card) != 20:
             raise ValueError("Введён некорректный номер счёта")
         mask_account_card_num = masks.get_mask_account(account_card[-20:])
         mask_account_card_all = account_card[:-20] + mask_account_card_num
     else:
-        if re.findall(r'\d+', account_card) != 16:
+        if re.findall(r"\d+", account_card) != 16:
             raise ValueError("Введён некорректный номер карты")
         mask_account_card_num = masks.get_mask_card_number(account_card[-16:])
         mask_account_card_all = account_card[:-16] + mask_account_card_num
