@@ -8,7 +8,7 @@ from string import ascii_uppercase, digits
 @pytest.fixture(scope="session")
 def generate_random_card_number():
     def card_number_generate(length=16):
-        return ''.join(str(randint(0, 9)) for _ in range(length))
+        return '01' + ''.join(str(randint(0, 9)) for _ in range(length-2))
 
     return card_number_generate
 
@@ -17,7 +17,7 @@ def generate_random_card_number():
 @pytest.fixture(scope="session")
 def generate_random_account_id():
     def account_id_generate(length=20):
-        return ''.join(str(randint(0, 9)) for _ in range(length))
+        return '01' + ''.join(str(randint(0, 9)) for _ in range(length-2))
 
     return account_id_generate
 
