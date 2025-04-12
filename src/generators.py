@@ -1,7 +1,8 @@
-from typing import List, Dict, Iterator
+from typing import Dict, Iterator, List
 
-def filter_by_currency (transactions: list[dict], code: str) -> Iterator[Dict[str, str]]:
-    """Генератор принимает на вход список словарей, представляющих транзакции и возвращает итератор, который поочередно выдает транзакции, где валюта операции соответствует заданной. """
+
+def filter_by_currency(transactions: list[dict], code: str) -> Iterator[Dict[str, str]]:
+    """Генератор принимает на вход список словарей, представляющих транзакции и возвращает итератор, который поочередно выдает транзакции, где валюта операции соответствует заданной."""
     if not isinstance(transactions, list):
         raise TypeError("Переданное значение 'transactions' должно быть списком")
     if not isinstance(code, str):
@@ -17,8 +18,9 @@ def filter_by_currency (transactions: list[dict], code: str) -> Iterator[Dict[st
         except AttributeError:
             continue
 
-def transaction_descriptions (transactions: list[dict]) -> Iterator[str]:
-    """Генератор принимает список словарей с транзакциями и возвращает описание каждой операции по очереди. """
+
+def transaction_descriptions(transactions: list[dict]) -> Iterator[str]:
+    """Генератор принимает список словарей с транзакциями и возвращает описание каждой операции по очереди."""
     if not isinstance(transactions, list):
         raise TypeError("Переданное значение 'transactions' должно быть списком")
     if not transactions:
@@ -30,8 +32,9 @@ def transaction_descriptions (transactions: list[dict]) -> Iterator[str]:
         if description is not None and isinstance(description, str):
             yield description
 
-def card_number_generator (start: int, end: int) -> Iterator[str]:
-    """Генератор принимает диапазон (начальное и конечное значения) и генерирует номер карты в этом диапазоне в формате XXXX XXXX XXXX XXXX. """
+
+def card_number_generator(start: int, end: int) -> Iterator[str]:
+    """Генератор принимает диапазон (начальное и конечное значения) и генерирует номер карты в этом диапазоне в формате XXXX XXXX XXXX XXXX."""
     if not isinstance(start, int) or not isinstance(end, int):
         raise TypeError("Аргументы должны быть целыми числами")
     if start < 0 or end > 9999999999999999:
@@ -42,4 +45,3 @@ def card_number_generator (start: int, end: int) -> Iterator[str]:
     for number in range(start, end + 1):
         card_num = f"{number:016d}"
         yield f"{card_num[:4]} {card_num[4:8]} {card_num[8:12]} {card_num[12:]}"
-
