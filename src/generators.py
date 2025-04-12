@@ -1,8 +1,9 @@
-from typing import Dict, Iterator, List
+from typing import Iterator
 
 
-def filter_by_currency(transactions: list[dict], code: str) -> Iterator[Dict[str, str]]:
-    """Генератор принимает на вход список словарей, представляющих транзакции и возвращает итератор, который поочередно выдает транзакции, где валюта операции соответствует заданной."""
+def filter_by_currency(transactions: list[dict], code: str) -> Iterator[dict[str, str]]:
+    """Генератор принимает на вход список словарей, представляющих транзакции и возвращает итератор,
+    который поочередно выдает транзакции, где валюта операции соответствует заданной."""
     if not isinstance(transactions, list):
         raise TypeError("Переданное значение 'transactions' должно быть списком")
     if not isinstance(code, str):
@@ -34,7 +35,8 @@ def transaction_descriptions(transactions: list[dict]) -> Iterator[str]:
 
 
 def card_number_generator(start: int, end: int) -> Iterator[str]:
-    """Генератор принимает диапазон (начальное и конечное значения) и генерирует номер карты в этом диапазоне в формате XXXX XXXX XXXX XXXX."""
+    """Генератор принимает диапазон (начальное и конечное значения)
+    и генерирует номер карты в этом диапазоне в формате XXXX XXXX XXXX XXXX."""
     if not isinstance(start, int) or not isinstance(end, int):
         raise TypeError("Аргументы должны быть целыми числами")
     if start < 0 or end > 9999999999999999:

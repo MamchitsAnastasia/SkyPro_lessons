@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 from random import choice, randint
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 import pytest
 
@@ -53,7 +53,7 @@ def generate_random_date() -> str:
 
 # "Фикстура с примером списка транзакций для тестирования
 @pytest.fixture
-def sample_transactions():
+def sample_transactions() -> list[dict[str, Any]]:
     return [
         {
             "id": 939719570,
@@ -105,5 +105,5 @@ def sample_transactions():
 
 # Фикстура с пустым списком транзакций
 @pytest.fixture
-def empty_transactions():
+def empty_transactions() -> list[dict[str, Any]]:
     return []
