@@ -11,10 +11,11 @@ def filter_by_currency (transactions: list[dict], code: str) -> Iterator[Dict[st
     for transaction in transactions:
         if not isinstance(transaction, dict):
             raise TypeError("Каждая транзакция в списке должна быть словарём")
-        if "code" not in transaction:
+        try:
+            if transaction.get("operationAmount", {}).get("currency", {}).get("code") == code:
+                yield transaction
+        except AttributeError:
             continue
-        if  transaction.get("code") == code:
-            yield transaction
 
 def transaction_descriptions (transactions: list[dict]) -> Iterator[str]:
     """Генератор принимает список словарей с транзакциями и возвращает описание каждой операции по очереди. """
@@ -25,18 +26,20 @@ def transaction_descriptions (transactions: list[dict]) -> Iterator[str]:
     for transaction in transactions:
         if not isinstance(transaction, dict):
             raise TypeError("Каждая транзакция в списке должна быть словарём")
-        if not isinstance(transaction.get("description"), str):
-            raise TypeError("Значение по ключу 'description' должно быть строкой")
-        if "description" not in  transaction:
-            continue
-        yield transaction.get("description")
+        description = transaction.get("description")
+        if description is not None and isinstance(description, str):
+            yield description
 
 def card_number_generator (start: int, end: int) -> Iterator[str]:
     """Генератор принимает диапазон (начальное и конечное значения) и генерирует номер карты в этом диапазоне в формате XXXX XXXX XXXX XXXX. """
-    if not (start < end) and not (0 <= end < 9999999999999999):
-        raise ValueError("Указан некорректный интервал для генерации.")
+    if not isinstance(start, int) or not isinstance(end, int):
+        raise TypeError("Аргументы должны быть целыми числами")
+    if start < 0 or end > 9999999999999999:
+        raise ValueError("Числа должны быть в диапазоне от 0 до 9999999999999999")
+    if start > end:
+        raise ValueError("Начальное значение должно быть меньше или равно конечному")
+
     for number in range(start, end + 1):
-        yield f"{number:016d}"[:4] + " " + f"{number:016d}"[4:8] + " " + f"{number:016d}"[8:12] + " " + f"{number:016d}"[12:]
-
-
+        card_num = f"{number:016d}"
+        yield f"{card_num[:4]} {card_num[4:8]} {card_num[8:12]} {card_num[12:]}"
 
