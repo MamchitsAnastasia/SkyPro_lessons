@@ -7,7 +7,7 @@
 
 Статус разработки: в разработке.
 
-Coverage report: [97%](http://localhost:63342/pythonproject/htmlcov/index.html?_ijt=315tro3c2643rg1p1lntajr0na&_ij_reload=RELOAD_ON_SAVE)
+Coverage report: [94%](http://localhost:63342/pythonproject/htmlcov/index.html?_ijt=s4vk9m6q40326ct178u01no569&_ij_reload=RELOAD_ON_SAVE)
 
 ## Установка:
 
@@ -105,6 +105,65 @@ print(processing.sort_by_date(list_of_operations, True))
 {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'}
 ]
 ```
+
++ ### filter_by_currency(transactions, code)
+
+Функция принимает на вход список словарей, представляющих транзакции и 
+возвращает итератор, который поочередно выдает транзакции, 
+где валюта операции соответствует заданной (например, USD).
+```
+list_of_transactions = [
+    {"id": 939719570, "operationAmount": {"currency": {"code": "USD"}}},
+    {"id": 142264268,"operationAmount": {"currency": {"code": "EUR"}}}
+]
+
+print(list(filter_by_currency(list_of_transactions, "USD")))
+```
+**Результат выполнения функции:** 
+```
+[
+    {"id": 939719570, "operationAmount": {"currency": {"code": "USD"}}}
+]
+```
++ ### transaction_descriptions(transactions)
+
+Функция принимает список словарей с транзакциями и возвращает описание каждой операции по очереди.
+```
+list_of_transactions = [
+    {"description": "Перевод организации"},
+    {"description": "Перевод с карты на карту"},
+    {"description": "Пополнение счета"}
+]
+
+print(list(transaction_descriptions(list_of_transactions)))
+```
+**Результат выполнения функции:** 
+```
+[
+    "Перевод организации",
+    "Перевод с карты на карту", 
+    "Пополнение счета"
+]
+```
+
++ ### card_number_generator(start, end)
+
+Функция принимает начальное и конечное значения для генерации диапазона номеров и 
+выдает номера банковских карт в формате XXXX XXXX XXXX XXXX , 
+где X — цифра номера карты. Генератор может сгенерировать номера карт в заданном диапазоне 
+от 0000 0000 0000 0001 до 9999 9999 9999 9999.
+```
+print(list(card_number_generator(1, 3)))
+```
+**Результат выполнения функции:** 
+```
+[
+    "0000 0000 0000 0001",
+    "0000 0000 0000 0002",
+    "0000 0000 0000 0003"
+]
+```
+
 ## ToDo:
 Необходимо собрать функции в файл main.py
 
