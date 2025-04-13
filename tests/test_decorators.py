@@ -16,7 +16,7 @@ def test_log_decorator_stdout_success(capsys: CaptureFixture[str]) -> None:
     """Тестирует декоратор log на функции без ошибки, при выводе логов в консоль"""
     result = divide(6, 3)
     captured = capsys.readouterr()
-    assert "divide started. Inputs: (6, 3), {}" in captured.out
+    assert "divide started." in captured.out
     assert "divide ok. Result: 2" in captured.out
     assert result == 2
 
@@ -26,7 +26,7 @@ def test_log_decorator_stdout_error(capsys: CaptureFixture[str]) -> None:
     with pytest.raises(ZeroDivisionError):
         divide(1, 0)
     captured = capsys.readouterr()
-    assert "divide started. Inputs: (1, 0), {}" in captured.out
+    assert "divide started." in captured.out
     assert "divide error: ZeroDivisionError. Inputs: (1, 0), {}" in captured.out
 
 
@@ -42,7 +42,7 @@ def test_log_decorator_file_success(tmp_path: Path) -> None:
     result = multiply(3, 4)
     log_content = log_file.read_text()  # Чтение содержимого временного файла
     assert result == 12
-    assert "multiply started. Inputs: (3, 4), {}" in log_content
+    assert "multiply started." in log_content
     assert "multiply ok. Result: 12" in log_content
 
 
@@ -58,5 +58,5 @@ def test_log_decorator_file_error(tmp_path: Path) -> None:
     with pytest.raises(TypeError):
         faulty_func()
     log_content = log_file.read_text()  # Чтение содержимого временного файла
-    assert "faulty_func started. Inputs: (), {}" in log_content
+    assert "faulty_func started." in log_content
     assert "faulty_func error: TypeError" in log_content

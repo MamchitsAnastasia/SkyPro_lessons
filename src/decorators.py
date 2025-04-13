@@ -8,7 +8,7 @@ def log(filename: Optional[str] = None) -> Callable[[Callable[..., Any]], Callab
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             func_name = func.__name__
             inputs = f"Inputs: {args}, {kwargs}"
-            start_message = f"{func_name} started. {inputs}"
+            start_message = f"{func_name} started."
             if filename:
                 with open(filename, "a") as f:
                     f.write(start_message + "\n")

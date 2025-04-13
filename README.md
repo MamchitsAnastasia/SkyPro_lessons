@@ -181,7 +181,7 @@ def calculate(6, 2):
 **Результат выполнения функции:** 
 ```
 [
-    calculate started. Inputs: (6, 2), {}
+    calculate started.
     calculate ok. Result: 3
 ]
 ```
