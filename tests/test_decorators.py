@@ -17,7 +17,7 @@ def test_log_decorator_stdout_success(capsys: CaptureFixture[str]) -> None:
     result = divide(6, 3)
     captured = capsys.readouterr()
     assert "divide started. Inputs: (6, 3), {}" in captured.out
-    assert "divide ok" in captured.out
+    assert "divide ok. Result: 2" in captured.out
     assert result == 2
 
 
@@ -43,7 +43,7 @@ def test_log_decorator_file_success(tmp_path: Path) -> None:
     log_content = log_file.read_text()  # Чтение содержимого временного файла
     assert result == 12
     assert "multiply started. Inputs: (3, 4), {}" in log_content
-    assert "multiply ok" in log_content
+    assert "multiply ok. Result: 12" in log_content
 
 
 def test_log_decorator_file_error(tmp_path: Path) -> None:

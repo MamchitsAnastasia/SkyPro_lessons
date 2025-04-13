@@ -17,7 +17,7 @@ def log(filename: Optional[str] = None) -> Callable[[Callable[..., Any]], Callab
 
             try:
                 result = func(*args, **kwargs)
-                message = f"{func_name} ok"
+                message = f"{func_name} ok. Result: {result}"
                 if filename:
                     with open(filename, "a") as f:
                         f.write(message + "\n")
