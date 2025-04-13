@@ -1,0 +1,42 @@
+from typing import Any, Callable, Optional
+
+
+def log(filename: Optional[str] = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    def decorator(
+        func: Callable[[Callable[..., Any]], Callable[..., Any]],
+    ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            func_name = func.__name__
+            inputs = f"Inputs: {args}, {kwargs}"
+            start_message = f"{func_name} started."
+            if filename:
+                with open(filename, "a") as f:
+                    f.write(start_message + "\n")
+            else:
+                print(start_message)
+
+            try:
+                result = func(*args, **kwargs)
+                message = f"{func_name} ok. Result: {result}"
+                if filename:
+                    with open(filename, "a") as f:
+                        f.write(message + "\n")
+                else:
+                    print(message)
+
+                return result
+
+            except Exception as e:
+                error_type = type(e).__name__
+                message = f"{func_name} error: {error_type}. {inputs}"
+                if filename:
+                    with open(filename, "a") as f:
+                        f.write(message + "\n")
+                else:
+                    print(message)
+
+                raise
+
+        return wrapper
+
+    return decorator

@@ -7,7 +7,7 @@
 
 Статус разработки: в разработке.
 
-Coverage report: [94%](http://localhost:63342/pythonproject/htmlcov/index.html?_ijt=s4vk9m6q40326ct178u01no569&_ij_reload=RELOAD_ON_SAVE)
+Coverage report: [95%](http://localhost:63342/pythonproject/htmlcov/index.html?_ijt=s4vk9m6q40326ct178u01no569&_ij_reload=RELOAD_ON_SAVE)
 
 ## Установка:
 
@@ -161,6 +161,28 @@ print(list(card_number_generator(1, 3)))
     "0000 0000 0000 0001",
     "0000 0000 0000 0002",
     "0000 0000 0000 0003"
+]
+```
++ ### log(filename: Optional[str] = None) -> Callable
+
+Декоратор, который автоматически логирует начало и конец выполнения функции, 
+а также ее результаты или возникшие ошибки.  
+Декоратор принимает необязательный аргумент filename, который определяет, 
+куда будут записываться логи (в файл или в консоль):
+
+Если filename задан, логи записываются в указанный файл.  
+Если filename не задан, логи выводятся в консоль.
+
+```
+@log()
+def calculate(6, 2):
+    return a / b
+```
+**Результат выполнения функции:** 
+```
+[
+    calculate started.
+    calculate ok. Result: 3
 ]
 ```
 
