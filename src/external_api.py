@@ -25,9 +25,10 @@ def convert_to_rub(transaction: dict) -> float:
         response.raise_for_status()
         rates = response.json().get("rates", {})
         rate = rates.get("RUB", 1)
-        return float(amount) * rate
+        return float(amount) * float(rate)
     except (requests.RequestException, ValueError, KeyError):
-        # Ошибка requests.RequestException если возникла проблема при запросе к API (нет интернета, сервер не отвечает и т.п.)
+        # Ошибка requests.RequestException если возникла проблема при запросе к API
+        # (нет интернета, сервер не отвечает и т.п.)
         # Ошибка ValueError если данные от API пришли в неверном формате (например, вместо числа пришла строка)
         # Ошибка KeyError если в ответе API отсутствует нужное поле (например, нет ключа "rates")
         return 0.0
