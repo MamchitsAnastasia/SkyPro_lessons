@@ -4,15 +4,8 @@ import json
 def load_transactions(file_path: str) -> list[dict]:
     """Функция загружает транзакции из JSON-файла, путь к которому передается как аргумент"""
     try:
-        # Проверяю существование файла
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                pass
-        except FileNotFoundError:
-            return []
-
         # Проверяю, не пустой ли файл
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             first_char = f.read(1)
             if not first_char:
                 return []
@@ -23,7 +16,8 @@ def load_transactions(file_path: str) -> list[dict]:
 
         return data if isinstance(data, list) else []
 
-    except (json.JSONDecodeError, OSError):
+    except (json.JSONDecodeError, OSError, FileNotFoundError):
         # Ошибка json.JSONDecodeError если файл не является корректным JSON
         # Ошибка OSError если нет доступа к файлу
+        # Ошибка FileNotFoundError если файл не найден
         return []

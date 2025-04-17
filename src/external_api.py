@@ -1,4 +1,5 @@
 import os
+
 import requests
 from dotenv import load_dotenv
 
@@ -7,8 +8,9 @@ API_KEY = os.getenv("EXCHANGE_RATES_API_KEY")
 
 BASE_URL = "https://api.apilayer.com/exchangerates_data/latest"
 
+
 def convert_to_rub(transaction: dict) -> float:
-    """Функция переводит валюту в RUB, запрашивая курсы на стороннем ресурсе. """
+    """Функция переводит валюту в RUB, запрашивая курсы на стороннем ресурсе."""
     operation_amount = transaction.get("operationAmount", {})
     amount = operation_amount.get("amount", 0)
     currency = operation_amount.get("currency", {}).get("code", "RUB").upper()
@@ -18,10 +20,7 @@ def convert_to_rub(transaction: dict) -> float:
 
     try:
         response = requests.get(
-            BASE_URL,
-            params={"base": currency, "symbols": "RUB"},
-            headers={"apikey": API_KEY},
-            timeout=10
+            BASE_URL, params={"base": currency, "symbols": "RUB"}, headers={"apikey": API_KEY}, timeout=10
         )
         response.raise_for_status()
         rates = response.json().get("rates", {})
