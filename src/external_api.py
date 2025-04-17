@@ -9,8 +9,9 @@ BASE_URL = "https://api.apilayer.com/exchangerates_data/latest"
 
 def convert_to_rub(transaction: dict) -> float:
     """Функция переводит валюту в RUB, запрашивая курсы на стороннем ресурсе. """
-    amount = transaction.get("amount", 0)
-    currency = transaction.get("currency", "RUB").upper()
+    operation_amount = transaction.get("operationAmount", {})
+    amount = operation_amount.get("amount", 0)
+    currency = operation_amount.get("currency", {}).get("code", "RUB").upper()
 
     if currency == "RUB":
         return float(amount)
