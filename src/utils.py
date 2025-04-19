@@ -1,6 +1,6 @@
-import json
 import logging
 import os
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -19,26 +19,38 @@ logger.addHandler(handler)
 
 
 def load_transactions(file_path: str) -> list[dict]:
-    """Функция загружает транзакции из JSON-файла, путь к которому передается как аргумент"""
+    """Функция загружает транзакции из JSON, CSV или XLSX-файла, путь к которому передается как аргумент"""
     try:
         logger.info(f"Попытка загрузить данные из файла: {file_path}")
-        # Проверяю, не пустой ли файл
-        with open(file_path, "r", encoding="utf-8") as f:
-            first_char = f.read(1)
-            if not first_char:
-                logger.warning(f"Файл {file_path} пуст")
-                return []
-            f.seek(0)  # "Перематываю" файл к началу
+        # Проверяю, существует ли файл
+        if not os.path.exists(file_path):
+            logger.error(f"Файл не найден: {file_path}")
+            return []
 
-            # Загружаю JSON данные
-            data = json.load(f)
-        result = data if isinstance(data, list) else []
+        # Проверяю, не пустой ли файл
+        if os.path.getsize(file_path) == 0:
+            logger.warning(f"Файл {file_path} пуст")
+            return []
+
+        # Определяю расширение файла
+        file_ext = os.path.splitext(file_path)[1].lower() #Получаю расширение загруженного файла и привожу к нижнему регистру
+
+        #Проверяю формат файла и читаю его
+        if file_ext == '.json':
+            df = pd.read_json(file_path)
+        elif file_ext == '.csv':
+            df = pd.read_csv(file_path, encoding='utf-8')
+        elif file_ext == '.xlsx':
+            df = pd.read_excel(file_path)
+        else:
+            logger.error(f"Неподдерживаемый формат файла: {file_ext}")
+            return []
+
+        # Конвертирую DataFrame в список словарей
+        result = df.to_dict('records')
         logger.info(f"Успешно загружено {len(result)} транзакций из файла {file_path}")
         return result
 
-    except (json.JSONDecodeError, OSError, FileNotFoundError) as e:
-        # Ошибка json.JSONDecodeError если файл не является корректным JSON
-        # Ошибка OSError если нет доступа к файлу
-        # Ошибка FileNotFoundError если файл не найден
+    except Exception as e: #Теперь перехватывает все исключения
         logger.error(f"Ошибка при загрузке данных из файла {file_path}: {e}", exc_info=True)
         return []
