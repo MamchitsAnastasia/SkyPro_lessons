@@ -19,7 +19,7 @@ logger.addHandler(handler)
 
 
 def load_transactions(file_path: str) -> list[dict]:
-    """Функция загружает транзакции из JSON, CSV или XLSX-файла, путь к которому передается как аргумент"""
+    """Функция загружает транзакции из CSV или XLSX-файла, путь к которому передается как аргумент"""
     try:
         logger.info(f"Попытка загрузить данные из файла: {file_path}")
         # Проверяю, существует ли файл
@@ -36,9 +36,7 @@ def load_transactions(file_path: str) -> list[dict]:
         file_ext = os.path.splitext(file_path)[1].lower() #Получаю расширение загруженного файла и привожу к нижнему регистру
 
         #Проверяю формат файла и читаю его
-        if file_ext == '.json':
-            df = pd.read_json(file_path)
-        elif file_ext == '.csv':
+        if file_ext == '.csv':
             df = pd.read_csv(file_path, encoding='utf-8')
         elif file_ext == '.xlsx':
             df = pd.read_excel(file_path)
