@@ -1,16 +1,17 @@
-import pytest
-from unittest.mock import patch
-import sys
 import os
-from datetime import datetime
+import sys
+from typing import Any
+from unittest.mock import patch
 
-# Добавляю путь к проекту
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from _pytest.capture import CaptureFixture
 
 from main import main
 
+# Добавляю путь к проекту
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-def test_main_flow_json_file(capsys):
+
+def test_main_flow_json_file(capsys: CaptureFixture[str]) -> None:
     """Тестирует main с JSON файлом"""
     # Создаю корректные тестовые данные
     sample_transactions = [
@@ -31,11 +32,11 @@ def test_main_flow_json_file(capsys):
         "EXECUTED",  # статус транзакции
         "Нет",  # не сортировать по дате
         "Нет",  # не фильтровать по рублям
-        "Нет"  # не фильтровать по описанию
+        "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -48,7 +49,8 @@ def test_main_flow_json_file(capsys):
     assert "Счет **6952" in output
     assert "Счет **6702" in output
 
-def test_main_sort_ascending(capsys):
+
+def test_main_sort_ascending(capsys: CaptureFixture[str]) -> None:
     """Тестирует main с сортировкой по возрастанию даты"""
     sample_transactions = [
         {
@@ -68,7 +70,7 @@ def test_main_sort_ascending(capsys):
             "description": "Перевод организации",
             "from": "Счет 75106830613657916952",
             "to": "Счет 11776614605963066702",
-        }
+        },
     ]
 
     # Создаю корректные входные значения
@@ -78,11 +80,11 @@ def test_main_sort_ascending(capsys):
         "Да",  # сортировать по дате
         "по возрастанию",  # сортировать по возрастанию
         "Нет",  # не фильтровать по рублям
-        "Нет"  # не фильтровать по описанию
+        "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -92,7 +94,8 @@ def test_main_sort_ascending(capsys):
     assert "04.04.2019" in output
     assert output.find("30.06.2018") < output.find("04.04.2019")
 
-def test_main_sort_descending(capsys):
+
+def test_main_sort_descending(capsys: CaptureFixture[str]) -> None:
     """Тестирует main с сортировкой по убыванию даты"""
     # Выбираю транзакций со статусом EXECUTED
     sample_transactions = [
@@ -113,7 +116,7 @@ def test_main_sort_descending(capsys):
             "description": "Перевод со счета на счет",
             "from": "Счет 19708645243227258542",
             "to": "Счет 75651667383060284188",
-        }
+        },
     ]
 
     # Создаю корректные входные значения
@@ -121,14 +124,13 @@ def test_main_sort_descending(capsys):
         "1",  # выбор JSON
         "EXECUTED",  # статус транзакции
         "Да",  # сортировать по дате
-        "по убыванию", # сортировать по убыванию
+        "по убыванию",  # сортировать по убыванию
         "Нет",  # не фильтровать по рублям
-        "Нет"  # не фильтровать по описанию
+        "Нет",  # не фильтровать по описанию
     ]
 
-
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -139,7 +141,8 @@ def test_main_sort_descending(capsys):
     assert "04.04.2019" in output
     assert output.find("04.04.2019") < output.find("30.06.2018")
 
-def test_main_filter_rub(capsys):
+
+def test_main_filter_rub(capsys: CaptureFixture[str]) -> None:
     """Тестирует main с фильтрацией по рублям"""
     sample_transactions = [
         {
@@ -159,13 +162,12 @@ def test_main_filter_rub(capsys):
             "description": "Перевод организации",
             "from": "Счет 75106830613657916952",
             "to": "Счет 11776614605963066702",
-        }
+        },
     ]
 
     # Мокаею функцию filter_by_currency, чтобы она действительно фильтровала по RUB
-    def mock_filter_by_currency(transactions, currency):
-        return [t for t in transactions
-                if t["operationAmount"]["currency"]["code"] == currency]
+    def mock_filter_by_currency(transactions: list[dict[str, Any]], currency: str) -> list[dict[str, Any]]:
+        return [t for t in transactions if t["operationAmount"]["currency"]["code"] == currency]
 
     # Создаю корректные входные значения
     input_values = [
@@ -173,12 +175,12 @@ def test_main_filter_rub(capsys):
         "EXECUTED",  # статус транзакции
         "Нет",  # не сортировать по дате
         "Да",  # фильтровать по рублям
-        "Нет"  # не фильтровать по описанию
+        "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('main.generators.filter_by_currency', side_effect=mock_filter_by_currency):
-            with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("main.generators.filter_by_currency", side_effect=mock_filter_by_currency):
+            with patch("builtins.input", side_effect=input_values):
                 main()
 
     captured = capsys.readouterr()
@@ -191,7 +193,7 @@ def test_main_filter_rub(capsys):
     assert "9824.07 USD" not in output
 
 
-def test_main_filter_description(capsys):
+def test_main_filter_description(capsys: CaptureFixture[str]) -> None:
     """Тестирует main с фильтрацией по описанию"""
     # Выбираю транзакций с статусом EXECUTED
     sample_transactions = [
@@ -212,7 +214,7 @@ def test_main_filter_description(capsys):
             "description": "Перевод со счета на счет",
             "from": "Счет 19708645243227258542",
             "to": "Счет 75651667383060284188",
-        }
+        },
     ]
 
     # Создаю корректные входные значения
@@ -221,12 +223,12 @@ def test_main_filter_description(capsys):
         "EXECUTED",  # статус транзакции
         "Нет",  # не сортировать по дате
         "Нет",  # не фильтровать по рублям
-        "Да", # фильтровать по описанию
+        "Да",  # фильтровать по описанию
         "Перевод организации",  # описание
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -236,7 +238,7 @@ def test_main_filter_description(capsys):
     assert "Перевод со счета на счет" not in output
 
 
-def test_main_no_transactions(capsys):
+def test_main_no_transactions(capsys: CaptureFixture[str]) -> None:
     """Тестирует main без подходящих транзакций"""
     # Выбираю транзакций со статусом EXECUTED
     sample_transactions = [
@@ -257,7 +259,7 @@ def test_main_no_transactions(capsys):
             "description": "Перевод со счета на счет",
             "from": "Счет 19708645243227258542",
             "to": "Счет 75651667383060284188",
-        }
+        },
     ]
     # Создаю корректные входные значения
     input_values = [
@@ -268,8 +270,8 @@ def test_main_no_transactions(capsys):
         "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -278,7 +280,7 @@ def test_main_no_transactions(capsys):
     assert "Не найдено ни одной транзакции" in output
 
 
-def test_main_csv_file(capsys):
+def test_main_csv_file(capsys: CaptureFixture[str]) -> None:
     """Тестирует main с CSV файлом"""
     sample_transactions = [
         {
@@ -301,8 +303,8 @@ def test_main_csv_file(capsys):
         "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_CSV_Excel.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_CSV_Excel.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -310,7 +312,7 @@ def test_main_csv_file(capsys):
     assert "Перевод с карты на карту" in captured.out
 
 
-def test_main_xlsx_file(capsys):
+def test_main_xlsx_file(capsys: CaptureFixture[str]) -> None:
     """Тестирует main с XLSX файлом"""
     sample_transactions = [
         {
@@ -333,8 +335,8 @@ def test_main_xlsx_file(capsys):
         "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_CSV_Excel.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_CSV_Excel.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -342,7 +344,7 @@ def test_main_xlsx_file(capsys):
     assert "Перевод со счета на счет" in captured.out
 
 
-def test_main_invalid_file_choice(capsys):
+def test_main_invalid_file_choice(capsys: CaptureFixture[str]) -> None:
     """Тестирует main при неверном выборе формата файла"""
     # Подготовка тестовых данных
     sample_transactions = [
@@ -364,11 +366,11 @@ def test_main_invalid_file_choice(capsys):
         "EXECUTED",  # статус транзакции
         "Нет",  # не сортировать по дате
         "Нет",  # не фильтровать по рублям
-        "Нет"  # не фильтровать по описанию
+        "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -378,7 +380,7 @@ def test_main_invalid_file_choice(capsys):
     assert "Перевод организации" in output
 
 
-def test_main_invalid_state(capsys):
+def test_main_invalid_state(capsys: CaptureFixture[str]) -> None:
     """Тестирует main при неверном статусе транзакции"""
     sample_transactions = [
         {
@@ -399,11 +401,11 @@ def test_main_invalid_state(capsys):
         "EXECUTED",  # затем верный статус
         "Нет",  # не сортировать по дате
         "Нет",  # не фильтровать по рублям
-        "Нет"  # не фильтровать по описанию
+        "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()
@@ -413,7 +415,7 @@ def test_main_invalid_state(capsys):
     assert "Перевод организации" in output
 
 
-def test_main_date_error_handling(capsys):
+def test_main_date_error_handling(capsys: CaptureFixture[str]) -> None:
     """Тестирует main при неформатируемой дате"""
     sample_transactions = [
         {
@@ -433,11 +435,11 @@ def test_main_date_error_handling(capsys):
         "EXECUTED",  # затем верный статус
         "Нет",  # не сортировать по дате
         "Нет",  # не фильтровать по рублям
-        "Нет"  # не фильтровать по описанию
+        "Нет",  # не фильтровать по описанию
     ]
 
-    with patch('main.utils_JSON.load_transactions', return_value=sample_transactions):
-        with patch('builtins.input', side_effect=input_values):
+    with patch("main.utils_JSON.load_transactions", return_value=sample_transactions):
+        with patch("builtins.input", side_effect=input_values):
             main()
 
     captured = capsys.readouterr()

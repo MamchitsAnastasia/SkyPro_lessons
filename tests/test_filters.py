@@ -217,6 +217,7 @@ def test_count_by_category_with_empty_or_none_descriptions() -> None:
     result = filters.count_transactions_by_category(SAMPLE_TRANSACTIONS, categories)  # type: ignore[arg-type]
     assert result == {"": 0}
 
+
 def test_count_by_category_mixed_case_categories() -> None:
     """Тестирует функцию count_transactions_by_category
     с категориями в разном регистре."""

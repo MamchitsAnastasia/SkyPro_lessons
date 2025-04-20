@@ -32,10 +32,6 @@ def sort_by_date(list_of_operations: list[dict], ascending: bool = False) -> lis
         except ValueError:
             continue
 
-    sorted_list_of_operations = sorted(
-        dated_operations,
-        key=lambda item: item[0],
-        reverse=not ascending
-    )
+    sorted_list_of_operations = sorted(dated_operations, key=lambda item: item[0], reverse=not ascending)
 
     return [operation for (date, operation) in sorted_list_of_operations]

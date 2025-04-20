@@ -2,7 +2,6 @@ import json
 import logging
 import os
 
-import pandas as pd
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

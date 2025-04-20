@@ -7,16 +7,18 @@ from src import utils_CSV_Excel
 
 def test_load_valid_csv_transactions() -> None:
     """Тестирует функцию load_transactions с корректным CSV-файлом"""
-    test_data = pd.DataFrame({
-        'id': [441945886, 41428829],
-        'state': ['EXECUTED', 'EXECUTED'],
-        'date': ['2019-08-26', '2019-07-03'],
-        'amount': ['31957.58', '8221.37'],
-        'currency_name': ['руб.', 'USD'],
-        'currency_code': ['RUB', 'USD'],
-        'description': ['Перевод', 'Платеж'],
-        'to': ['Счет 123', 'Счет 456']
-    })
+    test_data = pd.DataFrame(
+        {
+            "id": [441945886, 41428829],
+            "state": ["EXECUTED", "EXECUTED"],
+            "date": ["2019-08-26", "2019-07-03"],
+            "amount": ["31957.58", "8221.37"],
+            "currency_name": ["руб.", "USD"],
+            "currency_code": ["RUB", "USD"],
+            "description": ["Перевод", "Платеж"],
+            "to": ["Счет 123", "Счет 456"],
+        }
+    )
 
     with (
         patch("os.path.exists", return_value=True),
@@ -32,17 +34,19 @@ def test_load_valid_csv_transactions() -> None:
 
 def test_load_valid_xlsx_transactions() -> None:
     """Тестирует функцию load_transactions с корректным XLSX-файлом"""
-    test_data = pd.DataFrame({
-        'id': [441945886, 41428829],
-        'state': ['EXECUTED', 'EXECUTED'],
-        'date': ['2019-08-26', '2019-07-03'],
-        'amount': ['31957.58', '8221.37'],
-        'currency_name': ['руб.', 'USD'],
-        'currency_code': ['RUB', 'USD'],
-        'description': ['Перевод', 'Платеж'],
-        'to': ['Счет 123', 'Счет 456'],
-        'from': ['Карта 123', None]  # Поле может быть None
-    })
+    test_data = pd.DataFrame(
+        {
+            "id": [441945886, 41428829],
+            "state": ["EXECUTED", "EXECUTED"],
+            "date": ["2019-08-26", "2019-07-03"],
+            "amount": ["31957.58", "8221.37"],
+            "currency_name": ["руб.", "USD"],
+            "currency_code": ["RUB", "USD"],
+            "description": ["Перевод", "Платеж"],
+            "to": ["Счет 123", "Счет 456"],
+            "from": ["Карта 123", None],  # Поле может быть None
+        }
+    )
 
     with (
         patch("os.path.exists", return_value=True),
