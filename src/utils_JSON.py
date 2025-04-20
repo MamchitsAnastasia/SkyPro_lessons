@@ -1,5 +1,6 @@
 import logging
 import os
+
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -33,20 +34,22 @@ def load_transactions(file_path: str) -> list[dict]:
             return []
 
         # Определяю расширение файла
-        file_ext = os.path.splitext(file_path)[1].lower() #Получаю расширение загруженного файла и привожу к нижнему регистру
+        file_ext = os.path.splitext(file_path)[
+            1
+        ].lower()  # Получаю расширение загруженного файла и привожу к нижнему регистру
 
-        #Проверяю формат файла и читаю его
-        if file_ext == '.json':
+        # Проверяю формат файла и читаю его
+        if file_ext == ".json":
             df = pd.read_json(file_path)
         else:
             logger.error(f"Неподдерживаемый формат файла: {file_ext}")
             return []
 
         # Конвертирую DataFrame в список словарей
-        result = df.to_dict('records')
+        result = df.to_dict("records")
         logger.info(f"Успешно загружено {len(result)} транзакций из файла {file_path}")
         return result
 
-    except Exception as e: #Теперь перехватывает все исключения
+    except Exception as e:  # Теперь перехватывает все исключения
         logger.error(f"Ошибка при загрузке данных из файла {file_path}: {e}", exc_info=True)
         return []
