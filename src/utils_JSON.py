@@ -10,7 +10,7 @@ logger.setLevel(logging.DEBUG)
 os.makedirs("logs", exist_ok=True)  # Создаю папку logs, если её нет
 
 # Настройка обработчика для записи в файл
-handler = logging.FileHandler("logs/utils.log", mode="w", encoding='utf-8')
+handler = logging.FileHandler("logs/utils.log", mode="w", encoding="utf-8")
 handler.setLevel(logging.DEBUG)
 
 # Формат записи логов
@@ -43,12 +43,12 @@ def load_transactions(file_path: str) -> list[dict]:
             logger.error(f"Неподдерживаемый формат файла: {file_ext}")
             return []
 
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         # Обработка вложенной структуры JSON
-        if isinstance(data, dict) and 'transactions' in data:
-            transactions = data['transactions']
+        if isinstance(data, dict) and "transactions" in data:
+            transactions = data["transactions"]
         elif isinstance(data, list):
             transactions = data
         else:
@@ -56,7 +56,7 @@ def load_transactions(file_path: str) -> list[dict]:
             return []
 
         # Проверка обязательных полей
-        required_fields = {'id', 'state', 'date', 'operationAmount'}
+        required_fields = {"id", "state", "date", "operationAmount"}
         valid_transactions = []
         for transaction in transactions:
             if not all(field in transaction for field in required_fields):
