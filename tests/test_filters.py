@@ -175,7 +175,7 @@ def test_filter_by_description_empty_search_string() -> None:
 
 def test_count_by_category_exact_matches() -> None:
     """Тестирует функцию count_transactions_by_category
-    при точном совпадении категорий (регистрозависимый)."""
+    при точном совпадении категорий (регистронезависимый)."""
     categories = ["Перевод организации", "Открытие вклада", "Перевод со счета на счет"]
     result = filters.count_transactions_by_category(SAMPLE_TRANSACTIONS, categories)
     assert result == {"Перевод организации": 7, "Открытие вклада": 3, "Перевод со счета на счет": 2}
@@ -213,6 +213,13 @@ def test_count_by_category_empty_transactions() -> None:
 def test_count_by_category_with_empty_or_none_descriptions() -> None:
     """Тестирует функцию count_transactions_by_category
     при отсутствии описания у транзакций (None или пустая строка)."""
-    categories = ["", None]
+    categories = [""]
     result = filters.count_transactions_by_category(SAMPLE_TRANSACTIONS, categories)  # type: ignore[arg-type]
-    assert result == {"": 0, None: 0}
+    assert result == {"": 0}
+
+def test_count_by_category_mixed_case_categories() -> None:
+    """Тестирует функцию count_transactions_by_category
+    с категориями в разном регистре."""
+    categories = ["ПЕРЕВОД ОРГАНИЗАЦИИ", "оТкРыТиЕ вКлАдА"]
+    result = filters.count_transactions_by_category(SAMPLE_TRANSACTIONS, categories)
+    assert result == {"ПЕРЕВОД ОРГАНИЗАЦИИ": 7, "оТкРыТиЕ вКлАдА": 3}

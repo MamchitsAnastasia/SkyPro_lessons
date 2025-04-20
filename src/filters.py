@@ -1,3 +1,4 @@
+from collections import Counter
 import re
 from typing import Any
 
@@ -18,19 +19,23 @@ def filter_transactions_by_description(transactions: list[dict[str, Any]], searc
 
 def count_transactions_by_category(transactions: list[dict[str, Any]], categories: list[str]) -> dict[str, int]:
     """Функция подсчитывает количество транзакций по категориям:
-    transactions - список транзакций, categories - писок категорий для подсчета;
+    transactions - список транзакций, categories - список категорий для подсчета;
     и возвращает словарь с количеством транзакций по категориям"""
-    category_counts = {category: 0 for category in categories}
 
-    for transaction in transactions:
-        description = transaction.get("description")
-        if description is None or description == "":
-            continue
-        description = description.lower()
-        for category in categories:
-            if category is None:
-                continue
-            if description == category.lower():
-                category_counts[category] += 1
+    categories_lower = [category.lower() for category in categories if category is not None]
 
-    return category_counts
+    descriptions = [
+        transaction["description"].lower()
+        for transaction in transactions
+        if transaction.get("description") and transaction["description"].lower() in categories_lower
+    ]
+
+    counter = Counter(descriptions)
+
+    result = {}
+    for category in categories:
+        if category is not None:
+            lower_category = category.lower()
+            result[category] = counter.get(lower_category, 0)
+
+    return result
