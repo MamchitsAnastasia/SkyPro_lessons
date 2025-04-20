@@ -9,7 +9,7 @@ logger.setLevel(logging.DEBUG)
 os.makedirs("logs", exist_ok=True)  # Создаю папку logs, если её нет
 
 # Настройка обработчика для записи в файл
-handler = logging.FileHandler("logs/utils.log", mode="w", encoding='utf-8')
+handler = logging.FileHandler("logs/utils.log", mode="w", encoding="utf-8")
 handler.setLevel(logging.DEBUG)
 
 # Формат записи логов
@@ -42,7 +42,7 @@ def load_transactions(file_path: str) -> list[dict]:
 
         # Проверяю формат файла и читаю его
         if file_ext == ".csv":
-            df = pd.read_csv(file_path, delimiter=';', encoding="utf-8")
+            df = pd.read_csv(file_path, delimiter=";", encoding="utf-8")
         elif file_ext == ".xlsx":
             df = pd.read_excel(file_path)
         else:
@@ -58,13 +58,10 @@ def load_transactions(file_path: str) -> list[dict]:
                     "date": str(row["date"]),
                     "operationAmount": {
                         "amount": str(row["amount"]),
-                        "currency": {
-                            "name": str(row["currency_name"]),
-                            "code": str(row["currency_code"])
-                        }
+                        "currency": {"name": str(row["currency_name"]), "code": str(row["currency_code"])},
                     },
                     "description": str(row["description"]),
-                    "to": str(row["to"])
+                    "to": str(row["to"]),
                 }
                 if "from" in row and pd.notna(row["from"]):
                     transaction["from"] = str(row["from"])
