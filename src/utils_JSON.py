@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 
@@ -34,21 +35,37 @@ def load_transactions(file_path: str) -> list[dict]:
             return []
 
         # Определяю расширение файла
-        file_ext = os.path.splitext(file_path)[
-            1
-        ].lower()  # Получаю расширение загруженного файла и привожу к нижнему регистру
+        file_ext = os.path.splitext(file_path)[1].lower()
+        # Получаю расширение загруженного файла и привожу к нижнему регистру
 
         # Проверяю формат файла и читаю его
-        if file_ext == ".json":
-            df = pd.read_json(file_path)
-        else:
+        if file_ext != ".json":
             logger.error(f"Неподдерживаемый формат файла: {file_ext}")
             return []
 
-        # Конвертирую DataFrame в список словарей
-        result = df.to_dict("records")
-        logger.info(f"Успешно загружено {len(result)} транзакций из файла {file_path}")
-        return result
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Обработка вложенной структуры JSON
+        if isinstance(data, dict) and 'transactions' in data:
+            transactions = data['transactions']
+        elif isinstance(data, list):
+            transactions = data
+        else:
+            logger.error("Неподдерживаемая структура JSON")
+            return []
+
+        # Проверка обязательных полей
+        required_fields = {'id', 'state', 'date', 'operationAmount'}
+        valid_transactions = []
+        for transaction in transactions:
+            if not all(field in transaction for field in required_fields):
+                logger.warning(f"Пропущена транзакция с отсутствующими полями: {transaction.get('id')}")
+                continue
+            valid_transactions.append(transaction)
+
+        logger.info(f"Успешно загружено {len(valid_transactions)} транзакций")
+        return valid_transactions
 
     except Exception as e:  # Теперь перехватывает все исключения
         logger.error(f"Ошибка при загрузке данных из файла {file_path}: {e}", exc_info=True)

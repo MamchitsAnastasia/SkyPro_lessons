@@ -38,9 +38,11 @@ def load_transactions(file_path: str) -> list[dict]:
             1
         ].lower()  # Получаю расширение загруженного файла и привожу к нижнему регистру
 
+        transactions = []
+
         # Проверяю формат файла и читаю его
         if file_ext == ".csv":
-            df = pd.read_csv(file_path, encoding="utf-8")
+            df = pd.read_csv(file_path, delimiter=';', encoding="utf-8")
         elif file_ext == ".xlsx":
             df = pd.read_excel(file_path)
         else:
@@ -48,9 +50,31 @@ def load_transactions(file_path: str) -> list[dict]:
             return []
 
         # Конвертирую DataFrame в список словарей
-        result = df.to_dict("records")
-        logger.info(f"Успешно загружено {len(result)} транзакций из файла {file_path}")
-        return result
+        for _, row in df.iterrows():
+            try:
+                transaction = {
+                    "id": int(row["id"]),
+                    "state": str(row["state"]),
+                    "date": str(row["date"]),
+                    "operationAmount": {
+                        "amount": str(row["amount"]),
+                        "currency": {
+                            "name": str(row["currency_name"]),
+                            "code": str(row["currency_code"])
+                        }
+                    },
+                    "description": str(row["description"]),
+                    "to": str(row["to"])
+                }
+                if "from" in row and pd.notna(row["from"]):
+                    transaction["from"] = str(row["from"])
+                transactions.append(transaction)
+            except Exception as e:
+                logger.warning(f"Ошибка обработки строки {row.get('id')}: {e}")
+                continue
+
+        logger.info(f"Успешно загружено {len(transactions)} транзакций")
+        return transactions
 
     except Exception as e:  # Теперь перехватывает все исключения
         logger.error(f"Ошибка при загрузке данных из файла {file_path}: {e}", exc_info=True)
