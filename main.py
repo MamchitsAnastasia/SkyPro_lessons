@@ -141,7 +141,7 @@ def main() -> None:
                 if raw_date:
                     try:
                         if isinstance(raw_date, datetime):
-                        # Если транзакции были отсортированы по времени и дата уже datetime
+                        # Если дата уже datetime
                             formatted_date = raw_date.strftime("%d.%m.%Y")
                         else:
                         # Если транзакции не были отсортированы и дата подаётся строкой

@@ -20,7 +20,7 @@ def sort_by_date(list_of_operations: list[dict], ascending: bool = False) -> lis
     if not list_of_operations:
         return []
 
-    valid_operations = []
+    dated_operations = []
     for op in list_of_operations:
         date_str = op.get("date")
         if not date_str:
@@ -28,12 +28,14 @@ def sort_by_date(list_of_operations: list[dict], ascending: bool = False) -> lis
 
         try:
             parsed_date = datetime.fromisoformat(date_str)
-            valid_operations.append({**op, "date": parsed_date})
-        except ValueError as e:
+            dated_operations.append((parsed_date, op))
+        except ValueError:
             continue
 
     sorted_list_of_operations = sorted(
-        valid_operations, key=lambda operation: operation["date"], reverse=not ascending
+        dated_operations,
+        key=lambda item: item[0],
+        reverse=not ascending
     )
 
-    return sorted_list_of_operations
+    return [operation for (date, operation) in sorted_list_of_operations]
