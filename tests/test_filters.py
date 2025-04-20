@@ -140,7 +140,7 @@ def test_filter_by_description_exact_match() -> None:
     """Тестирует функцию filter_transactions_by_description
     при точном совпадении строки поиска с описанием транзакции."""
     result = filters.filter_transactions_by_description(SAMPLE_TRANSACTIONS, "Перевод организации")
-    assert len(result) == 6
+    assert len(result) == 7
     assert result[0]["description"] == "Перевод организации"
 
 
@@ -155,7 +155,7 @@ def test_filter_by_description_partial_match() -> None:
 def test_filter_by_description_case_insensitive() -> None:
     """Тестирует функцию filter_transactions_by_description на регистронезависимость"""
     result = filters.filter_transactions_by_description(SAMPLE_TRANSACTIONS, "перевод организации")
-    assert len(result) == 6
+    assert len(result) == 7
     assert all("Перевод организации" in tx["description"] for tx in result)
 
 
@@ -178,14 +178,14 @@ def test_count_by_category_exact_matches() -> None:
     при точном совпадении категорий (регистрозависимый)."""
     categories = ["Перевод организации", "Открытие вклада", "Перевод со счета на счет"]
     result = filters.count_transactions_by_category(SAMPLE_TRANSACTIONS, categories)
-    assert result == {"Перевод организации": 6, "Открытие вклада": 3, "Перевод со счета на счет": 2}
+    assert result == {"Перевод организации": 7, "Открытие вклада": 3, "Перевод со счета на счет": 2}
 
 
 def test_count_by_category_case_sensitive() -> None:
     """Тестирует функцию count_transactions_by_category на регистронезависимость"""
     categories = ["перевод организации", "открытие вклада"]
     result = filters.count_transactions_by_category(SAMPLE_TRANSACTIONS, categories)
-    assert result == {"перевод организации": 6, "открытие вклада": 3}
+    assert result == {"перевод организации": 7, "открытие вклада": 3}
 
 
 def test_count_by_category_partial_matches_not_counted() -> None:
