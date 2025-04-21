@@ -7,7 +7,7 @@ logger.setLevel(logging.DEBUG)
 os.makedirs("logs", exist_ok=True)  # Создаю папку logs, если её нет
 
 # Настройка обработчика для записи в файл
-handler = logging.FileHandler("logs/masks.log", mode="w")
+handler = logging.FileHandler("logs/masks.log", mode="w", encoding="utf-8")
 handler.setLevel(logging.DEBUG)
 
 # Формат записи логов

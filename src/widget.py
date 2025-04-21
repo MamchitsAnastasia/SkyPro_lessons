@@ -6,21 +6,30 @@ from src import masks
 
 def mask_account_card(account_card: str) -> str:
     """Принимает на вход наименование карты или счёта (тип и номер) и возвращает маску"""
+    if not isinstance(account_card, str):
+        raise ValueError("Входные данные должны быть строкой")
 
-    if account_card[:4] == "Счет":
-        account_card_num = re.findall(r"\d+", account_card)
-        if len(account_card_num[0]) != 20 or len(account_card_num) == 0:
-            raise ValueError("Введён некорректный номер счёта")
-        mask_account_card_num = masks.get_mask_account(account_card[-20:])
-        mask_account_card_all = account_card[:-20] + mask_account_card_num
+    account_card_num = re.findall(r"\d+", account_card)
+    if not account_card_num:
+        raise ValueError("Не найден номер карты/счёта в строке")
+
+    if account_card.startswith("Счет"):
+        if len(account_card_num[0]) != 20:
+            raise ValueError("Номер счёта должен содержать 20 цифр")
+        try:
+            mask_account_card_num = masks.get_mask_account(account_card_num[0])
+            return f"Счет {mask_account_card_num}"
+        except Exception as e:
+            raise ValueError(f"Ошибка маскирования счёта: {e}")
     else:
-        account_card_num = re.findall(r"\d+", account_card)
-        if len(account_card_num[0]) != 16 or len(account_card_num) == 0:
-            raise ValueError("Введён некорректный номер карты")
-        mask_account_card_num = masks.get_mask_card_number(account_card[-16:])
-        mask_account_card_all = account_card[:-16] + mask_account_card_num
-
-    return mask_account_card_all
+        if len(account_card_num[0]) != 16:
+            raise ValueError("Номер карты должен содержать 16 цифр")
+        try:
+            mask_account_card_num = masks.get_mask_card_number(account_card_num[0])
+            card_name = account_card[:-16].strip()
+            return f"{card_name} {mask_account_card_num}"
+        except Exception as e:
+            raise ValueError(f"Ошибка маскирования карты: {e}")
 
 
 def get_date(unformatted_date: str) -> str:

@@ -1,7 +1,10 @@
+import os
 from typing import Any
 from unittest.mock import Mock, patch
 
 import requests
+
+os.environ["TESTING"] = "1"
 
 from src import external_api
 
